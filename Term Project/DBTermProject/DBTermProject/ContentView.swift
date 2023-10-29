@@ -14,9 +14,10 @@ struct ContentView: View {
                 Color.gray
                     .opacity(0.1)
                     .ignoresSafeArea(edges: .bottom)
-                VStack(spacing: 30) {
+                VStack(spacing: 10) {
                     dropBox
                     Spacer()
+                    result
                 }
                 .frame(height: 500)
                 VStack {
@@ -27,14 +28,18 @@ struct ContentView: View {
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("데이터베이스시스템")
             .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    HStack {
+                        erase
+                        run
+                    }
+                }
                 ToolbarItem(placement: .topBarTrailing) {
-                    run
+                    question
                 }
             }
-            .toolbar {
-                ToolbarItem(placement: .topBarLeading) {
-                    erase
-                }
+            .navigationDestination(isPresented: $showResult) {
+                Text("Result View")
             }
         }
     }
@@ -66,6 +71,15 @@ struct ContentView: View {
         return true
     }
     
+    @State private var showResult = false
+    
+    private var result: some View {
+        Button("Watch result") {
+            showResult = true
+        }
+        .buttonStyle(.borderedProminent)
+    }
+    
     @State private var commands: [String] = []
     @State private var selectedSqlCommands: [String] = []
     
@@ -75,9 +89,17 @@ struct ContentView: View {
                 .frame(height: 10)
             ForEach(selectedSqlCommands.indices, id: \.self) { index in
                 HStack {
-                    Text(selectedSqlCommands[index]).bold()
+                    Text(selectedSqlCommands[index])
+                        .bold()
+                        .padding(.horizontal)
+                        .background(
+                            RoundedRectangle(cornerRadius: 4)
+                                .fill(.brown)
+                        )
                     TextField("SQL명령어를 입력해주세요", text: $commands[index])
                         .textFieldStyle(.roundedBorder)
+                        .textInputAutocapitalization(.never)
+                        .autocorrectionDisabled()
                 }
                 .padding(.horizontal)
             }
@@ -98,7 +120,7 @@ struct ContentView: View {
         for index in selectedSqlCommands.indices {
             command += selectedSqlCommands[index] + " " + commands[index] + " "
         }
-        print(command)
+        print(command)  // replace post api request to server
     }
     
     private var erase: some View {
@@ -123,13 +145,28 @@ struct ContentView: View {
                             .padding()
                             .background {
                                 RoundedRectangle(cornerRadius: 14)
-                                    .fill(.blue.opacity(0.9))
+                                    .fill(.orange.opacity(0.9))
                             }
                     }
                     .draggable(sql)
                 }
             }
             .padding(.horizontal)
+        }
+    }
+    
+    @State private var showDescription = false
+    
+    private var question: some View {
+        Button {
+            showDescription = true
+        } label: {
+            Image(systemName: "questionmark.circle")
+        }
+        .sheet(isPresented: $showDescription) {
+            NavigationStack {
+                Description()
+            }
         }
     }
 }
