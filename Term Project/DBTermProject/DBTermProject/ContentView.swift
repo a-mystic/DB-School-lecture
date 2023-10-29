@@ -110,7 +110,7 @@ struct ContentView: View {
         }
     }
     
-    private let sqlCommands = ["Select", "Insert", "From", "Where", "Order by", "Join", "Into"]
+    private let sqlCommands = ["SELECT", "INSERT", "FROM", "WHERE", "ORDER BY", "JOIN", "INTO"]
     
     private var sqlSlider: some View {
         ScrollView(.horizontal) {
