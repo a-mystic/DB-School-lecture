@@ -25,9 +25,15 @@ struct ContentView: View {
                 }
             }
             .navigationBarTitleDisplayMode(.inline)
+            .navigationTitle("데이터베이스시스템")
             .toolbar {
                 ToolbarItem(placement: .topBarTrailing) {
                     run
+                }
+            }
+            .toolbar {
+                ToolbarItem(placement: .topBarLeading) {
+                    erase
                 }
             }
         }
@@ -93,6 +99,15 @@ struct ContentView: View {
             command += selectedSqlCommands[index] + " " + commands[index] + " "
         }
         print(command)
+    }
+    
+    private var erase: some View {
+        Button {
+            commands = []
+            selectedSqlCommands = []
+        } label: {
+            Image(systemName: "eraser.fill")
+        }
     }
     
     private let sqlCommands = ["Select", "Insert", "From", "Where", "Order by", "Join", "Into"]
