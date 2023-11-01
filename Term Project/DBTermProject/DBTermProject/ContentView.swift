@@ -109,18 +109,41 @@ struct ContentView: View {
     
     private var run: some View {
         Button {
-            running()
+            Task {
+                await running()
+            }
         } label: {
             Image(systemName: "arrowtriangle.right.fill")
         }
     }
     
-    private func running() {
+    private func running() async {
         var command = ""
         for index in selectedSqlCommands.indices {
             command += selectedSqlCommands[index] + " " + commands[index] + " "
         }
-        print(command)  // replace post api request to server
+//        print(command)  // replace post api request to server
+        if let encodingCommand = command.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
+            let url = "url/" + chooseApiCall(selectedSqlCommands[0]) + "?command=" + encodingCommand
+            guard let url = URL(string: url) else { return }
+            do {
+                let (data, _) = try await URLSession.shared.data(from: url)
+                let returnValue = try JSONDecoder().decode(String.self, from: data)
+                print(returnValue)
+            } catch {
+                print(error)
+            }
+        }
+    }
+    
+    private func chooseApiCall(_ command: String) -> String {
+        if command == "Select" {
+            return "select"
+        } else if command == "Insert" {
+            return "insert"
+        } else {
+            return "delete"
+        }
     }
     
     private var erase: some View {
