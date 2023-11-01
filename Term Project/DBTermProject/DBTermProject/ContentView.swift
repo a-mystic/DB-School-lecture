@@ -39,7 +39,7 @@ struct ContentView: View {
                 }
             }
             .navigationDestination(isPresented: $showResult) {
-                Text("Result View")
+                ResultView(resultValue)
             }
         }
     }
@@ -117,6 +117,8 @@ struct ContentView: View {
         }
     }
     
+    @State private var resultValue = ""
+    
     private func running() async {
         var command = ""
         for index in selectedSqlCommands.indices {
@@ -129,7 +131,7 @@ struct ContentView: View {
             do {
                 let (data, _) = try await URLSession.shared.data(from: url)
                 let returnValue = try JSONDecoder().decode(String.self, from: data)
-                print(returnValue)
+                resultValue = returnValue
             } catch {
                 print(error)
             }
