@@ -15,10 +15,14 @@ struct ResultView: View {
     }
     
     var body: some View {
-        Text(result)
+        Form {
+            Section("실행결과") {
+                Text(result)
+            }
+        }
     }
 }
 
 #Preview {
-    ResultView("Preview")
+    ResultView("Preview\n1\n2\n3\n4\n5")
 }
