@@ -139,9 +139,9 @@ struct ContentView: View {
     }
     
     private func chooseApiCall(_ command: String) -> String {
-        if command == "Select" {
+        if command == "SELECT" {
             return "select"
-        } else if command == "Insert" {
+        } else if command == "INSERT INTO" {
             return "insert"
         } else {
             return "delete"
@@ -157,7 +157,7 @@ struct ContentView: View {
         }
     }
     
-    private let sqlCommands = ["SELECT", "INSERT", "FROM", "WHERE", "ORDER BY", "JOIN", "INTO"]
+    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP"]
     
     private var sqlSlider: some View {
         ScrollView(.horizontal) {
