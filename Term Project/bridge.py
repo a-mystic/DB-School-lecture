@@ -19,21 +19,32 @@ async def select(command: str):
     returnValue = ""
     results = cursor.fetchall()
     for result in results:
-        returnValue += result
-    disappear()
+        returnValue += str(result)
     return returnValue
 
 @app.get("/insert")
 async def insert(command: str):
     cursor.execute(command)
-    disappear()
     return "입력하신 데이터가 입력되었습니다."
 
 @app.get("/delete")
 async def delete(command: str):
     cursor.execute(command)
-    disappear()
     return "입력하신 데이터가 삭제되었습니다."
+
+@app.get("/show")
+async def show(command: str):
+    cursor.execute("show tables")
+    returnValue = ""
+    results = cursor.fetchall()
+    for result in results:
+        returnValue += str(result)
+    return returnValue
+
+@app.get("/end")
+async def end(command: str):
+    disappear()
+    return "종료되었습니다."
 
 def disappear():
     connect.commit()

@@ -24,13 +24,18 @@ struct ContentView: View {
                     Spacer()
                     sqlSlider
                 }
+                if isFetching {
+                    ProgressView()
+                        .scaleEffect(2)
+                        .tint(.white)
+                }
             }
             .navigationBarTitleDisplayMode(.inline)
             .navigationTitle("데이터베이스시스템")
             .toolbar {
                 ToolbarItem(placement: .topBarLeading) {
                     HStack {
-                        erase
+                        eraser
                         run
                     }
                 }
@@ -91,10 +96,10 @@ struct ContentView: View {
                 HStack {
                     Text(selectedSqlCommands[index])
                         .bold()
-                        .padding(.horizontal)
+                        .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(.brown)
+                                .fill(.purple)
                         )
                     TextField("SQL명령어를 입력해주세요", text: $commands[index])
                         .textFieldStyle(.roundedBorder)
@@ -118,8 +123,10 @@ struct ContentView: View {
     }
     
     @State private var resultValue = ""
+    @State private var isFetching = false
     
     private func running() async {
+        isFetching = true
         var command = ""
         for index in selectedSqlCommands.indices {
             command += selectedSqlCommands[index] + " " + commands[index] + " "
@@ -132,7 +139,8 @@ struct ContentView: View {
             let (data, _) = try await URLSession.shared.data(from: url)
             let returnValue = try JSONDecoder().decode(String.self, from: data)
             resultValue = returnValue
-            print(returnValue)
+            isFetching = false
+            erase()
         } catch {
             print(error)
         }
@@ -145,21 +153,27 @@ struct ContentView: View {
             return "insert"
         } else if command == "종료" {
             return "end"
+        } else if command == "테이블보기" {
+            return "show"
         } else {
             return "delete"
         }
     }
     
-    private var erase: some View {
+    private var eraser: some View {
         Button {
-            commands = []
-            selectedSqlCommands = []
+            erase()
         } label: {
             Image(systemName: "eraser.fill")
         }
     }
     
-    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP", "종료"]
+    private func erase() {
+        commands = []
+        selectedSqlCommands = []
+    }
+    
+    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP", "종료", "테이블보기"]
     
     private var sqlSlider: some View {
         ScrollView(.horizontal) {
