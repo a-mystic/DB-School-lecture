@@ -124,17 +124,17 @@ struct ContentView: View {
         for index in selectedSqlCommands.indices {
             command += selectedSqlCommands[index] + " " + commands[index] + " "
         }
-//        print(command)  // replace post api request to server
-        if let encodingCommand = command.addingPercentEncoding(withAllowedCharacters: .urlQueryAllowed) {
-            let url = "url/" + chooseApiCall(selectedSqlCommands[0]) + "?command=" + encodingCommand
-            guard let url = URL(string: url) else { return }
-            do {
-                let (data, _) = try await URLSession.shared.data(from: url)
-                let returnValue = try JSONDecoder().decode(String.self, from: data)
-                resultValue = returnValue
-            } catch {
-                print(error)
-            }
+        command = command.replacingOccurrences(of: "’", with: "'")
+        command = command.replacingOccurrences(of: "‘", with: "'")
+        let url = "https://c11a-175-205-103-204.ngrok.io/" + chooseApiCall(selectedSqlCommands[0]) + "?command=" + command
+        guard let url = URL(string: url) else { return }
+        do {
+            let (data, _) = try await URLSession.shared.data(from: url)
+            let returnValue = try JSONDecoder().decode(String.self, from: data)
+            resultValue = returnValue
+            print(returnValue)
+        } catch {
+            print(error)
         }
     }
     
@@ -143,6 +143,8 @@ struct ContentView: View {
             return "select"
         } else if command == "INSERT INTO" {
             return "insert"
+        } else if command == "종료" {
+            return "end"
         } else {
             return "delete"
         }
@@ -157,7 +159,7 @@ struct ContentView: View {
         }
     }
     
-    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP"]
+    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP", "종료"]
     
     private var sqlSlider: some View {
         ScrollView(.horizontal) {
