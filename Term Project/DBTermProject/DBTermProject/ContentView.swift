@@ -126,7 +126,7 @@ struct ContentView: View {
         }
         command = command.replacingOccurrences(of: "’", with: "'")
         command = command.replacingOccurrences(of: "‘", with: "'")
-        let url = "https://c11a-175-205-103-204.ngrok.io/" + chooseApiCall(selectedSqlCommands[0]) + "?command=" + command
+        let url = "ngrok URL인데 http설정 안돼있어서 접속주소는 반드시 https로 접속해야함." + chooseApiCall(selectedSqlCommands[0]) + "?command=" + command
         guard let url = URL(string: url) else { return }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
