@@ -153,8 +153,8 @@ struct ContentView: View {
             return "insert"
         } else if command == "종료" {
             return "end"
-        } else if command == "테이블보기" {
-            return "show"
+        } else if command == "ALTER" {
+            return "alter"
         } else {
             return "delete"
         }
@@ -173,7 +173,7 @@ struct ContentView: View {
         selectedSqlCommands = []
     }
     
-    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP", "종료", "테이블보기"]
+    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP", "ALTER","종료"]
     
     private var sqlSlider: some View {
         ScrollView(.horizontal) {

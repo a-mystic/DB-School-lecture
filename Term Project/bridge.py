@@ -32,14 +32,10 @@ async def delete(command: str):
     cursor.execute(command)
     return "입력하신 데이터가 삭제되었습니다."
 
-@app.get("/show")
-async def show(command: str):
-    cursor.execute("show tables")
-    returnValue = ""
-    results = cursor.fetchall()
-    for result in results:
-        returnValue += str(result)
-    return returnValue
+@app.get("/alter")
+async def alter(command: str):
+    cursor.execute(command)
+    return "입력하신 데이터가 적용되었습니다."
 
 @app.get("/end")
 async def end(command: str):
