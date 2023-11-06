@@ -37,6 +37,11 @@ async def alter(command: str):
     cursor.execute(command)
     return "입력하신 데이터가 적용되었습니다."
 
+@app.get("/update")
+async def update(command: str):
+    cursor.execute(command)
+    return "입력하신 데이터값으로 값이 업데이트 되었습니다."
+
 @app.get("/end")
 async def end(command: str):
     disappear()

@@ -20,6 +20,7 @@ struct Description: View {
                 Text("데이터 삽입")
                 Text("데이터 삭제")
                 Text("데이터 변경")
+                Text("테이블 제약사항 변경")
             }
         }
         .toolbar {

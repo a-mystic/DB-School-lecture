@@ -155,6 +155,8 @@ struct ContentView: View {
             return "end"
         } else if command == "ALTER" {
             return "alter"
+        } else if command == "UPDATE" {
+            return "update"
         } else {
             return "delete"
         }
@@ -173,7 +175,7 @@ struct ContentView: View {
         selectedSqlCommands = []
     }
     
-    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP", "ALTER","종료"]
+    private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP", "ALTER", "UPDATE", "SET","종료"]
     
     private var sqlSlider: some View {
         ScrollView(.horizontal) {
@@ -194,6 +196,9 @@ struct ContentView: View {
             }
             .padding(.horizontal)
         }
+        .padding()
+        .background(Color.gray.opacity(0.4))
+        .clipped()
     }
     
     @State private var showDescription = false
