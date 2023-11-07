@@ -8,7 +8,7 @@ connect = pymysql.connect(
     port=4567,
     user='dohyunkim',
     password='0000',
-    db='Termproject',
+    db='TermProject',
     charset='utf8'
 )
 cursor = connect.cursor()
@@ -19,7 +19,7 @@ async def select(command: str):
     returnValue = ""
     results = cursor.fetchall()
     for result in results:
-        returnValue += str(result)
+        returnValue += str(result) + "\n"
     return returnValue
 
 @app.get("/insert")

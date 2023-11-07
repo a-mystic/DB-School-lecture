@@ -17,7 +17,9 @@ struct ContentView: View {
                 VStack(spacing: 10) {
                     dropBox
                     Spacer()
-                    result
+                    if resultIsFetched {
+                        result
+                    }
                 }
                 .frame(height: 500)
                 VStack {
@@ -45,6 +47,9 @@ struct ContentView: View {
             }
             .navigationDestination(isPresented: $showResult) {
                 ResultView(resultValue)
+            }
+            .onAppear {
+                resultIsFetched = false
             }
         }
     }
@@ -99,7 +104,7 @@ struct ContentView: View {
                         .padding()
                         .background(
                             RoundedRectangle(cornerRadius: 4)
-                                .fill(.purple)
+                                .fill(.purple.opacity(0.7).gradient)
                         )
                     TextField("SQL명령어를 입력해주세요", text: $commands[index])
                         .textFieldStyle(.roundedBorder)
@@ -124,6 +129,7 @@ struct ContentView: View {
     
     @State private var resultValue = ""
     @State private var isFetching = false
+    @State private var resultIsFetched = false
     
     private func running() async {
         isFetching = true
@@ -133,7 +139,8 @@ struct ContentView: View {
         }
         command = command.replacingOccurrences(of: "’", with: "'")
         command = command.replacingOccurrences(of: "‘", with: "'")
-        let url = "ngrok URL인데 http설정 안돼있어서 접속주소는 반드시 https로 접속해야함." + chooseApiCall(selectedSqlCommands[0]) + "?command=" + command
+        // ngrok URL인데 http설정 안돼있어서 접속주소는 반드시 https로 접속해야함.
+        let url = "https://f674-175-205-103-204.ngrok.io/" + chooseApiCall(selectedSqlCommands[0]) + "?command=" + command
         guard let url = URL(string: url) else { return }
         do {
             let (data, _) = try await URLSession.shared.data(from: url)
@@ -141,6 +148,7 @@ struct ContentView: View {
             resultValue = returnValue
             isFetching = false
             erase()
+            resultIsFetched = true
         } catch {
             print(error)
         }
@@ -171,8 +179,8 @@ struct ContentView: View {
     }
     
     private func erase() {
-        commands = []
         selectedSqlCommands = []
+        commands = []
     }
     
     private let sqlCommands = ["SELECT", "INSERT INTO", "FROM", "WHERE", "ORDER BY", "JOIN", "VALUES", "DROP", "ALTER", "UPDATE", "SET","종료"]
